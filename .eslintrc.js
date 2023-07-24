@@ -5,6 +5,7 @@ module.exports = {
   },
   extends: [
     'plugin:vue/vue3-essential',
+    'plugin:prettier/recommended',
     '@vue/standard',
     '@vue/typescript/recommended'
   ],
@@ -12,9 +13,17 @@ module.exports = {
     ecmaVersion: 2020
   },
   rules: {
+    'prettier/prettier': 'error',
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off'
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    /* eslint-disable */
+    'space-before-function-paren': ['error', {
+    anonymous: 'always',
+    named: 'never',
+    asyncArrow: 'always'
+  }]
   },
+  "plugins": ["prettier"],
   overrides: [
     {
       files: [
