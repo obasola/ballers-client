@@ -5,8 +5,4 @@ import component from '../shims-vue';
 
 <script setup lang="ts">
 import EditPlayerComponent from 'src/components/players/EditPlayerComponent.vue'
-
-components: {
-  EditPlayerComponent
-}
 </script>

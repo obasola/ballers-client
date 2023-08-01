@@ -1,82 +1,54 @@
 <template>
-  <q-page>
-    <h2>Edit Pick</h2>
-    <div>
-      <q-form class="q-gutter-md">
-        <q-input
-          v-model="pickStore.pick.selectionYear"
-          label="Draft Year *"
-          hint="The year the draft pick is available"
-        />
-        <q-input v-model="pickStore.pick.player" label="Player Name *" />
-        <q-select
-          filled
-          use-input
-          hide-selected
-          fill-input
-          v-model="pickStore.pick.teamId"
-          :options="teamOptionsList"
-          label="Single"
-          style="width: 250px"
-        />
-        <q-input
-          v-model="pickStore.pick.selectionRound"
-          type="text"
-          label="Round"
-        />
-
-        <q-input
-          v-model="pickStore.pick.selectionNumber"
-          type="text"
-          label="Pick Number"
-        />
-
-        <q-input
-          v-model="pickStore.pick.selectionPickFrom"
-          type="text"
-          label="Pick Received From"
-        />
-
-        <q-input
-          v-model="pickStore.pick.selectionPickTo"
-          type="text"
-          label="Pick Sent To"
-        />
-        <q-input
-          v-model="pickStore.pick.combineScore"
-          type="number"
-          label="Combine Score"
-        />
-        <div>
-          <q-btn
-            v-on:click="submit"
-            label="Submit"
-            type="submit"
-            color="primary"
-          />
-          <q-btn
-            v-on:click="reset"
-            label="Reset"
-            type="reset"
-            color="primary"
-            flat
-            class="q-ml-sm"
-          />
-        </div>
-      </q-form>
+  <div class="card flex flex-wrap gap-3 p-fluid">
+    <div class="card flex justify-content-center">
+      <Dropdown
+        v-model="selectedTeam"
+        :options="teamOptionsList"
+        optionLabel="Team"
+        placeholder="Select a Team"
+        class="w-full md:w-14rem"
+      />
     </div>
-  </q-page>
+    <div class="flex-auto">
+      <label for="pname" class="font-bold block mb-2"> Player </label>
+      <Input v-model="pickStore.pick.playerName" inputId="playername" />
+    </div>
+    <div class="flex-auto">
+      <label for="pickRound" class="font-bold block mb-2"> `Round` </label>
+      <InputNumber
+        v-model="pickStore.pick.selectionRound"
+        inputId="pickRound"
+        :useGrouping="false"
+      />
+    </div>
+    <div class="flex-auto">
+      <label for="pickNumber" class="font-bold block mb-2"> `Number` </label>
+      <InputNumber
+        v-model="pickStore.pick.selectionNumber"
+        inputId="pickNumber"
+        :useGrouping="false"
+      />
+    </div>
+    <div class="flex-auto">
+      <label for="pickYear" class="font-bold block mb-2"> `Round` </label>
+      <Input
+        v-model="pickStore.pick.selectionYear"
+        inputId="pickYear"
+        :useGrouping="false"
+      />
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
 import axios from 'axios'
 
 import { usePickStore } from 'src/stores/pick-store'
-import PickDataService from 'src/services/PickDataService'
-import { QInput } from 'quasar'
-import { onMounted } from 'vue'
-
+import { ref, onMounted } from 'vue'
+import Team from '@/domain/ITeam'
+import pickService from 'src/services/TeamDataService.js'
 const pickStore = usePickStore()
+const selectedTeam = ref(0)
 const teamOptionsList = [
   {
     value: 12,
@@ -108,28 +80,36 @@ const teamOptionsList = [
   }
 ]
 
-const pickService = new PickDataService()
-
 onMounted(() => {
-  pickStore.pick.playerId
+  getPickById()
 })
 
 function submit() {
   alert('Submit clicked')
   pickService.create(pickStore.pick)
+  console.log('Pick saved')
+}
+async function getPickById() {
+  axios
+    .get('http://localhost:3000/pick/' + pickStore.pick.playerId)
+    .then((response) => {
+      pickStore.pick = response.data
+      return pickStore.pick
+    })
+    .catch((e) => {
+      alert('error: ' + e)
+    })
 }
 function reset() {
   alert('Reset clicked')
 }
 
 async function getData() {
-  // alert('getting data');
-
   await axios
     .get('http://localhost:3000/picks')
     .then((response) => {
-      const records: Array<Team> = response.data
-      return records
+      pickStore.picks = response.data
+      return pickStore.picks
     })
     .catch((e) => {
       alert('error: ' + e)

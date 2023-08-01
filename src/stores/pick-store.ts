@@ -55,6 +55,55 @@ export const usePickStore = defineStore('pick', {
         console.log(error)
       }
     },
+
+    async create() {
+      axios
+        .post('http://localhost:3000/pick', this.pick)
+        .then((response) => console.log('data = ' + response.data))
+        .catch((error) => {
+          console.log('There was an error!', error)
+          console.log('Error: ' + error.message)
+        })
+    },
+    async fetchPickById() {
+      try {
+        const data = await axios.get(url + '/pick/' + this.pick.id)
+        this.pick = data.data
+      } catch (error) {
+        alert(error)
+        console.log(error)
+      }
+    },
+    async updatePick(data: {
+      data: {
+        id: number
+        teamId: number
+        playerId: number
+        playerName: string
+        selectionRound: number
+        selectionNumber: number
+        selectionYear: string
+        selectionPickFrom: string
+        selectionPickTo: string
+        combineScore: number
+      }
+    }) {
+      try {
+        await axios.put(`/pick/${this.pick.id}`, data)
+        this.pick = data.data
+      } catch (error) {
+        alert(error)
+        console.log(error)
+      }
+    },
+    async deletePick() {
+      try {
+        await axios.delete(`/pick/${this.pick.id}`)
+      } catch (error) {
+        alert(error)
+        console.log(error)
+      }
+    },
     async stagePickForEditing(row: Pick) {
       this.pick.id = row.id
       this.pick.selectionNumber = row.selectionNumber

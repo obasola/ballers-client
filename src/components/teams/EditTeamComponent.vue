@@ -107,7 +107,6 @@ function confirmSave() {
   )
 }
 async function submit() {
-  confirmSave
   await service
     .create(teamStore)
     .then((response) => {

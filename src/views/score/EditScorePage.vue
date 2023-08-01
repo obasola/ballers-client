@@ -5,8 +5,4 @@ import component from '../shims-vue';
 
 <script setup lang="ts">
 import EditTeamComponent from '../components/teams/EditTeamComponent.vue'
-
-components: {
-  EditTeamComponent
-}
 </script>

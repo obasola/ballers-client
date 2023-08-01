@@ -51,13 +51,12 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { usePickStore } from 'src/stores/pick-store'
-import { ref, reactive,onMounted } from 'vue'
-import Row from 'primevue/row'
+import { ref, reactive, onMounted } from 'vue'
 
 const selectedPick = ref()
 const router = useRouter()
 const pickStore = usePickStore()
-// const picks = ref<Pick>([]);
+
 onMounted(() => {
   pickStore.fetchPicks()
 })
@@ -68,7 +67,7 @@ function addPick() {
 
 function editPick() {
   alert('selected row: ' + selectedPick.value)
-  const pickSelection: Pick = reactive(selectedPick.value)
+  const pickSelection = reactive(selectedPick.value)
   pickStore.stagePickForEditing(pickSelection)
   router.push({ path: '/editPick?id=' + pickSelection.id })
 }
